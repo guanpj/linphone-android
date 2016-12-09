@@ -1,3 +1,0 @@
-version=3
-
-http://download.savannah.gnu.org/releases-noredirect/linphone/stable/sources/ linphone-([\d\.]+).tar.gz debian svn-upgrade

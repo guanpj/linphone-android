@@ -1,4 +1,0 @@
-usr/lib/libmediastreamer_base.so
-usr/lib/libmediastreamer_voip.so
-usr/lib/pkgconfig/mediastreamer.pc
-usr/include/mediastreamer2/*.h

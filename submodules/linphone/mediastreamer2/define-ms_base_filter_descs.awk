@@ -1,1 +1,0 @@
-BEGIN { print("MSFilterDesc * ms_base_filter_descs[]={") } { printf("&%s,\n",$1) } END{ print("NULL\n};\n") }
