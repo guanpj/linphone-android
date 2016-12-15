@@ -73,49 +73,49 @@
   <!--Status-->
   <!--In-app-->
   <!--Dailer-->
-  <string name="address_bar_hint">輸入號碼或位址</string>
+  <string name="address_bar_hint">输入号码或对话</string>
   <!--History-->
-  <string name="no_call_history">記錄中沒有通話</string>
-  <string name="no_missed_call_history">記錄中沒有未接來電</string>
-  <string name="delete_history_log">你想要刪除選取的通話紀錄嗎？</string>
+  <string name="no_call_history">暂无通话记录</string>
+  <string name="no_missed_call_history">暂无未接来电</string>
+  <string name="delete_history_log">确定删除选中的通话记录？</string>
   <string name="today">今天</string>
   <string name="yesterday">昨天</string>
   <!--Contacts-->
-  <string name="no_contact">通訊錄中沒有連絡人。</string>
-  <string name="no_sip_contact">通訊錄中沒有 SIP 連絡人。</string>
-  <string name="delete_contacts">你想要刪除選取的聯絡人嗎？</string>
-  <string name="delete_contact">你想要刪除選取的聯絡人嗎？</string>
-  <string name="sip_address">SIP 位址</string>
+  <string name="no_contact">通讯录中暂无联系人。</string>
+  <string name="no_sip_contact">通讯录中暂无 SIP 联系人。</string>
+  <string name="delete_contacts">确定删除选中联系人？</string>
+  <string name="delete_contact">确定删除此联系人？</string>
+  <string name="sip_address">SIP 地址</string>
   <string name="contact_first_name">名字</string>
   <string name="contact_last_name">姓氏</string>
   <!--Chat-->
-  <string name="no_chat_history">沒有對話</string>
-  <string name="delete_conversation">你想要刪除選取的對話嗎？</string>
-  <string name="delete_message">你想要刪除選取的訊息嗎？</string>
-  <string name="remote_composing">對方正在輸入...</string>
+  <string name="no_chat_history">暂无对话</string>
+  <string name="delete_conversation">确定删除选中的对话？</string>
+  <string name="delete_message">确定删除选中的信息？</string>
+  <string name="remote_composing">对方正在输入...</string>
   <string name="share_picture_size_small">小</string>
   <string name="share_picture_size_medium">中</string>
   <string name="share_picture_size_large">大</string>
-  <string name="share_picture_size_real">真實大小</string>
-  <string name="text_copied_to_clipboard">文字已複製到剪貼簿</string>
-  <string name="copy_text">複製文字</string>
-  <string name="image_picker_title">選擇來源</string>
-  <string name="image_saved">已儲存圖片</string>
-  <string name="image_not_saved">錯誤，沒有儲存圖片</string>
-  <string name="wait">請稍候...</string>
+  <string name="share_picture_size_real">真实大小</string>
+  <string name="text_copied_to_clipboard">文字已复制到剪贴板</string>
+  <string name="copy_text">复制文字</string>
+  <string name="image_picker_title">选择来源</string>
+  <string name="image_saved">图片保存成功</string>
+  <string name="image_not_saved">图片保存失败</string>
+  <string name="wait">请稍候...</string>
   <!--Status Bar-->
-  <string name="status_connected">已註冊</string>
-  <string name="status_not_connected">未註冊</string>
-  <string name="status_in_progress">正在註冊</string>
-  <string name="status_error">註冊失敗</string>
-  <string name="voicemail_unread">未讀訊息</string>
+  <string name="status_connected">已注册</string>
+  <string name="status_not_connected">未注册</string>
+  <string name="status_in_progress">正在注册</string>
+  <string name="status_error">注册失败</string>
+  <string name="voicemail_unread">未读信息</string>
   <!--Side Menu-->
-  <string name="menu_assistant">助理</string>
-  <string name="menu_settings">設定</string>
-  <string name="menu_about">關於</string>
+  <string name="menu_assistant">帮助</string>
+  <string name="menu_settings">设置</string>
+  <string name="menu_about">关于</string>
   <string name="quit">退出</string>
   <!--Call-->
-  <string name="incoming_call">來電</string>
+  <string name="incoming_call">来电</string>
   <string name="outgoing_call">撥出電話</string>
   <string name="add_video_dialog">對方想要啟用視訊</string>
   <string name="call_paused_by_remote">對方暫停了通話</string>
