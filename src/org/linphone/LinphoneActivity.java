@@ -19,42 +19,6 @@ package org.linphone;
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-
-import org.linphone.LinphoneManager.AddressType;
-import org.linphone.assistant.AssistantActivity;
-import org.linphone.assistant.RemoteProvisioningLoginActivity;
-import org.linphone.compatibility.Compatibility;
-import org.linphone.core.CallDirection;
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneAuthInfo;
-import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.LinphoneCallLog;
-import org.linphone.core.LinphoneCallLog.CallStatus;
-import org.linphone.core.LinphoneChatMessage;
-import org.linphone.core.LinphoneChatRoom;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCore.RegistrationState;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.core.Reason;
-import org.linphone.mediastream.Log;
-import org.linphone.purchase.InAppPurchaseActivity;
-import org.linphone.ui.AddressText;
-import org.linphone.xmlrpc.XmlRpcHelper;
-import org.linphone.xmlrpc.XmlRpcListenerBase;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -95,6 +59,42 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.linphone.LinphoneManager.AddressType;
+import org.linphone.assistant.AssistantActivity;
+import org.linphone.assistant.RemoteProvisioningLoginActivity;
+import org.linphone.compatibility.Compatibility;
+import org.linphone.core.CallDirection;
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneAuthInfo;
+import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCallLog;
+import org.linphone.core.LinphoneCallLog.CallStatus;
+import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatRoom;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.Reason;
+import org.linphone.mediastream.Log;
+import org.linphone.purchase.InAppPurchaseActivity;
+import org.linphone.ui.AddressText;
+import org.linphone.xmlrpc.XmlRpcHelper;
+import org.linphone.xmlrpc.XmlRpcListenerBase;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Sylvain Berfini

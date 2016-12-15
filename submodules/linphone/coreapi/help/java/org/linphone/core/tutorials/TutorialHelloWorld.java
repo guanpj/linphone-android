@@ -18,9 +18,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package org.linphone.core.tutorials;
 
-import java.nio.ByteBuffer;
-
 import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallStats;
@@ -33,7 +32,6 @@ import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.LogCollectionUploadState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCore.RemoteProvisioningState;
-import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
@@ -44,6 +42,8 @@ import org.linphone.core.LinphoneInfoMessage;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PublishState;
 import org.linphone.core.SubscriptionState;
+
+import java.nio.ByteBuffer;
 
 
 /**

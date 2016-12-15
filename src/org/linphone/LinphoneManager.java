@@ -130,8 +130,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private AudioManager mAudioManager;
 	private PowerManager mPowerManager;
 	private Resources mR;
-	private LinphonePreferences mPrefs;
-	private LinphoneCore mLc;
+	private LinphonePreferences mPrefs;		//存储轻量级数据
+	private LinphoneCore mLc;	//Linphone核心类，负责跟底层交互
 	private OpenH264DownloadHelper mCodecDownloader;
 	private OpenH264DownloadHelperListener mCodecListener;
 	private String lastLcStatusMessage;
@@ -146,12 +146,13 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private Handler mHandler = new Handler();
 	private WakeLock mIncallWakeLock;
 	private LinphoneAccountCreator accountCreator;
-	private static List<LinphoneChatMessage> mPendingChatFileMessage;
-	private static LinphoneChatMessage mUploadPendingFileMessage;
+	private static List<LinphoneChatMessage> mPendingChatFileMessage;	// 存放所有的聊天类信息
+	private static LinphoneChatMessage mUploadPendingFileMessage;	// 当前的聊天类信息，包括文件传输等。
 
 
 	public String wizardLoginViewDomain = null;
 
+	/** 聊天的回调接口链表 */
 	private static List<LinphoneChatMessage.LinphoneChatMessageListener> simpleListeners = new ArrayList<LinphoneChatMessage.LinphoneChatMessageListener>();
 	public static void addListener(LinphoneChatMessage.LinphoneChatMessageListener listener) {
 		if (!simpleListeners.contains(listener)) {
@@ -162,6 +163,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		simpleListeners.remove(listener);
 	}
 
+	//初始化各种存储文件和各种传感器的设备
 	protected LinphoneManager(final Context c) {
 		sExited = false;
 		echoTesterIsRunning = false;
@@ -204,9 +206,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private final String mFriendsDatabaseFile;
 	private final String mErrorToneFile;
 	private final String mUserCertificatePath;
-	private ByteArrayInputStream mUploadingImageStream;
+	private ByteArrayInputStream mUploadingImageStream;	//用于文件传输的内存缓冲流对象
 	private Timer mTimer;
 
+	//是否允许声音设备使用
 	private void routeAudioToSpeakerHelper(boolean speakerOn) {
 		Log.w("Routing audio to " + (speakerOn ? "speaker" : "earpiece") + ", disabling bluetooth audio route");
 		BluetoothManager.getInstance().disableBluetoothSCO();
@@ -313,12 +316,14 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		return instance;
 	}
 
+	//添加一个聊天信息
 	public void addDownloadMessagePending(LinphoneChatMessage message){
 		synchronized (mPendingChatFileMessage) {
 			mPendingChatFileMessage.add(message);
 		}
 	}
 
+	//判断消息是否已经添加到消息列表中了
 	public boolean isMessagePending(LinphoneChatMessage message){
 		boolean messagePending = false;
 		synchronized (mPendingChatFileMessage) {
@@ -332,6 +337,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		return messagePending;
 	}
 
+	//删除消息
 	public void removePendingMessage(LinphoneChatMessage message){
 		synchronized (mPendingChatFileMessage) {
 			for (LinphoneChatMessage chat : mPendingChatFileMessage) {
@@ -448,7 +454,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 	}
 
-
+	//获取实例
 	public static synchronized final LinphoneManager getInstance() {
 		if (instance != null) return instance;
 
@@ -578,6 +584,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 	}
 
+	//DTMF:双音多频信号(DTMF)
 	public void playDtmf(ContentResolver r, char dtmf) {
 		try {
 			if (Settings.System.getInt(r, Settings.System.DTMF_TONE_WHEN_DIALING) == 0) {
@@ -679,6 +686,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		sExited = false;
 	}
 
+	//创建LinphoneCoreFactoryImple, 在这个类里加载了so库
 	private synchronized void startLibLinphone(Context c) {
 		try {
 			copyAssetsFromPackage();
@@ -709,6 +717,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 	}
 
+	//初始化推送服务
 	private void initPushNotificationsService() {
 		try {
             Class<?> GCMRegistrar = Class.forName("com.google.android.gcm.GCMRegistrar");

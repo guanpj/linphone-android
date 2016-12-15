@@ -18,33 +18,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.widget.*;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.linphone.LinphoneActivity;
-import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
-import org.linphone.LinphoneUtils;
-import org.linphone.LinphonePreferences.AccountBuilder;
-import org.linphone.R;
-import org.linphone.StatusFragment;
-import org.linphone.core.DialPlan;
-import org.linphone.core.LinphoneAccountCreator;
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneAddress.TransportType;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCore.RegistrationState;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.mediastream.Log;
-import org.linphone.mediastream.Version;
-import org.linphone.tools.OpenH264DownloadHelper;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -63,10 +36,39 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
+import org.linphone.LinphonePreferences.AccountBuilder;
+import org.linphone.LinphoneUtils;
+import org.linphone.R;
+import org.linphone.StatusFragment;
+import org.linphone.core.DialPlan;
+import org.linphone.core.LinphoneAccountCreator;
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneAddress.TransportType;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.mediastream.Log;
+import org.linphone.mediastream.Version;
+import org.linphone.tools.OpenH264DownloadHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;

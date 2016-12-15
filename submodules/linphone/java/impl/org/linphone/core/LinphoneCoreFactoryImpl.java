@@ -21,15 +21,14 @@ package org.linphone.core;
 import android.content.Context;
 import android.os.Build;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.MediastreamerAndroidContext;
 import org.linphone.mediastream.Version;
 import org.linphone.tools.OpenH264DownloadHelper;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 	public static String ABI;
@@ -157,8 +156,8 @@ public class LinphoneCoreFactoryImpl extends LinphoneCoreFactory {
 	@Override
 	public native void setDebugMode(boolean enable, String tag);
 
-
 	private native void _setLogHandler(Object handler);
+
 	@Override
 	public void setLogHandler(LinphoneLogHandler handler) {
 		_setLogHandler(handler);
