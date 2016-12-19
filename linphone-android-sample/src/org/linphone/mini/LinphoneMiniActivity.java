@@ -20,20 +20,44 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 /**
  * @author Sylvain Berfini
  */
-public class LinphoneMiniActivity extends Activity
+public class LinphoneMiniActivity extends Activity implements View.OnClickListener
 {
     private LinphoneMiniManager mManager;
+
+    private EditText txtNum;
+    private Button btnCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.aaa_main);
         mManager = new LinphoneMiniManager(this);
+
+        txtNum = (EditText) findViewById(R.id.txt_num);
+        btnCall = (Button) findViewById(R.id.btn_call);
+
+        btnCall.setOnClickListener(this);
+
+        login();
+    }
+
+    private void login()
+    {
+
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+
     }
 
     @Override

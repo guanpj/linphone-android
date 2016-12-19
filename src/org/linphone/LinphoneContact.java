@@ -18,24 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package org.linphone;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneFriend;
-import org.linphone.core.LinphoneFriend.SubscribePolicy;
-import org.linphone.core.PresenceBasicStatus;
-import org.linphone.core.PresenceModel;
-import org.linphone.mediastream.Log;
-
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -44,8 +26,24 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.provider.MediaStore;
 import android.provider.ContactsContract.CommonDataKinds;
+import android.provider.MediaStore;
+
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneFriend;
+import org.linphone.core.LinphoneFriend.SubscribePolicy;
+import org.linphone.core.PresenceBasicStatus;
+import org.linphone.core.PresenceModel;
+import org.linphone.mediastream.Log;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class LinphoneContact implements Serializable, Comparable<LinphoneContact> {
 	/**

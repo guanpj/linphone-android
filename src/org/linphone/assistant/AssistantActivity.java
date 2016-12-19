@@ -461,6 +461,12 @@ private static AssistantActivity instance;
 		return phoneNumberWithCountry;
 	}
 
+	@Override
+	public Intent getIntent()
+	{
+		return super.getIntent();
+	}
+
 	public void saveCreatedAccount(String username, String password, String prefix, String ha1, String domain, TransportType transport) {
 		if (accountCreated)
 			return;

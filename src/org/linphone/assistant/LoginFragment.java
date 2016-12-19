@@ -17,9 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-import org.linphone.R;
-import org.linphone.core.LinphoneAddress.TransportType;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -32,6 +29,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import org.linphone.R;
+import org.linphone.core.LinphoneAddress.TransportType;
 /**
  * @author Sylvain Berfini
  */
