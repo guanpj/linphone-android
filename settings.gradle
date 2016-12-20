@@ -1,2 +1,1 @@
-
-include ':linphone-android-sample'
+include ':sample', ':sample'
