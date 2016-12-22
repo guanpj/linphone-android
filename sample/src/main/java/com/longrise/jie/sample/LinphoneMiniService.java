@@ -11,12 +11,14 @@ import android.support.annotation.Nullable;
 
 public class LinphoneMiniService extends Service
 {
-
+    private static LinphoneMiniService mInstance;
 
     @Override
     public void onCreate()
     {
         super.onCreate();
+        mInstance = this;
+        LinphoneMiniManager.createAndStart(LinphoneMiniService.this);
     }
 
     @Nullable

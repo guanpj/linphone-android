@@ -64,6 +64,37 @@ public class LinphoneMiniManager implements LinphoneCoreListener
     private LinphoneCore mLinphoneCore;
     private Timer mTimer;
 
+    private LinphoneMiniManager()
+    {
+
+        try
+        {
+            String basePath = mContext.getFilesDir().getAbsolutePath();
+            copyAssetsFromPackage(basePath);
+            mLinphoneCore = LinphoneCoreFactory.instance().createLinphoneCore(this, basePath + "/.linphonerc", basePath + "/linphonerc", null, mContext);
+            initLinphoneCoreValues(basePath);
+
+            setUserAgent();
+            setFrontCamAsDefault();
+            startIterate();
+            mInstance = this;
+            mLinphoneCore.setNetworkReachable(true); // Let's assume it's true
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public synchronized static final LinphoneMiniManager createAndStart(Context c)
+    {
+        if(mInstance == null)
+        {
+            mInstance = new LinphoneMiniManager();
+        }
+        return mInstance;
+    }
+
     public LinphoneMiniManager(Context c)
     {
         mContext = c;
@@ -79,7 +110,6 @@ public class LinphoneMiniManager implements LinphoneCoreListener
             setUserAgent();
             setFrontCamAsDefault();
             startIterate();
-            mInstance = this;
             mLinphoneCore.setNetworkReachable(true); // Let's assume it's true
         }
         catch (LinphoneCoreException e)
