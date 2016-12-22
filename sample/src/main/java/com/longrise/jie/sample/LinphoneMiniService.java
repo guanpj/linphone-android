@@ -11,6 +11,8 @@ import android.support.annotation.Nullable;
 
 public class LinphoneMiniService extends Service
 {
+
+
     @Override
     public void onCreate()
     {
