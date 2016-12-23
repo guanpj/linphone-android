@@ -20,6 +20,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.content.Context;
 
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneProxyConfig;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -52,5 +55,30 @@ public class LinphoneMiniUtils
         lOutputStream.flush();
         lOutputStream.close();
         lInputStream.close();
+    }
+
+    public static String getDisplayableUsernameFromAddress(String sipAddress) {
+        String username = sipAddress;
+        LinphoneCore lc = LinphoneMiniManager.getLcIfManagerNotDestroyedOrNull();
+        if (lc == null) return username;
+
+        if (username.startsWith("sip:")) {
+            username = username.substring(4);
+        }
+
+        if (username.contains("@")) {
+            String domain = username.split("@")[1];
+            LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
+            if (lpc != null) {
+                if (domain.equals(lpc.getDomain())) {
+                    return username.split("@")[0];
+                }
+            } else {
+                if (domain.equals(LinphoneMiniManager.getInstance().getContext().getString(R.string.default_domain))) {
+                    return username.split("@")[0];
+                }
+            }
+        }
+        return username;
     }
 }

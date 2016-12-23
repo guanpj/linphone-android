@@ -34,7 +34,6 @@ import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCore.RemoteProvisioningState;
-import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneEvent;
@@ -64,14 +63,17 @@ public class LinphoneMiniManager implements LinphoneCoreListener
     private LinphoneCore mLinphoneCore;
     private Timer mTimer;
 
-    private LinphoneMiniManager()
-    {
+    public String mLinphoneConfigFile;
 
+    private LinphoneMiniManager(Context context)
+    {
         try
         {
+            mContext = context;
             String basePath = mContext.getFilesDir().getAbsolutePath();
             copyAssetsFromPackage(basePath);
-            mLinphoneCore = LinphoneCoreFactory.instance().createLinphoneCore(this, basePath + "/.linphonerc", basePath + "/linphonerc", null, mContext);
+            mLinphoneConfigFile = basePath + "/.linphonerc";
+            mLinphoneCore = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneConfigFile, null, mContext);
             initLinphoneCoreValues(basePath);
 
             setUserAgent();
@@ -90,39 +92,29 @@ public class LinphoneMiniManager implements LinphoneCoreListener
     {
         if(mInstance == null)
         {
-            mInstance = new LinphoneMiniManager();
+            mInstance = new LinphoneMiniManager(c);
         }
         return mInstance;
     }
 
-    public LinphoneMiniManager(Context c)
+    public LinphoneMiniManager()
     {
-        mContext = c;
-        LinphoneCoreFactory.instance().setDebugMode(true, "Linphone Mini");
-
-        try
-        {
-            String basePath = mContext.getFilesDir().getAbsolutePath();
-            copyAssetsFromPackage(basePath);
-            mLinphoneCore = LinphoneCoreFactory.instance().createLinphoneCore(this, basePath + "/.linphonerc", basePath + "/linphonerc", null, mContext);
-            initLinphoneCoreValues(basePath);
-
-            setUserAgent();
-            setFrontCamAsDefault();
-            startIterate();
-            mLinphoneCore.setNetworkReachable(true); // Let's assume it's true
-        }
-        catch (LinphoneCoreException e)
-        {
-        }
-        catch (IOException e)
-        {
-        }
+        super();
     }
 
     public static LinphoneMiniManager getInstance()
     {
         return mInstance;
+    }
+
+    public static synchronized final LinphoneCore getLc()
+    {
+        return getInstance().mLinphoneCore;
+    }
+
+    public Context getContext()
+    {
+        return mContext;
     }
 
     public void destroy()
@@ -191,8 +183,8 @@ public class LinphoneMiniManager implements LinphoneCoreListener
         LinphoneMiniUtils.copyIfNotExist(mContext, R.raw.oldphone_mono, basePath + "/oldphone_mono.wav");
         LinphoneMiniUtils.copyIfNotExist(mContext, R.raw.ringback, basePath + "/ringback.wav");
         LinphoneMiniUtils.copyIfNotExist(mContext, R.raw.hold, basePath + "/hold.mkv");
-        LinphoneMiniUtils.copyIfNotExist(mContext, R.raw.linphonerc_default, basePath + "/.linphonerc");
-        LinphoneMiniUtils.copyFromPackage(mContext, R.raw.linphonerc_factory, new File(basePath + "/linphonerc").getName());
+        LinphoneMiniUtils.copyIfNotExist(mContext, R.raw.linphonerc_default, mLinphoneConfigFile);
+        LinphoneMiniUtils.copyFromPackage(mContext, R.raw.linphonerc_factory, new File(mLinphoneConfigFile).getName());
         LinphoneMiniUtils.copyIfNotExist(mContext, R.raw.lpconfig, basePath + "/lpconfig.xsd");
         LinphoneMiniUtils.copyIfNotExist(mContext, R.raw.rootca, basePath + "/rootca.pem");
     }
@@ -209,6 +201,19 @@ public class LinphoneMiniManager implements LinphoneCoreListener
         mLinphoneCore.setCpuCount(availableCores);
     }
 
+    public static synchronized LinphoneCore getLcIfManagerNotDestroyedOrNull()
+    {
+        if (mInstance == null)
+        {
+            return null;
+        }
+        return getLc();
+    }
+
+    public static final boolean isInstanciated()
+    {
+        return mInstance != null;
+    }
 
     @Override
     public void globalState(LinphoneCore lc, GlobalState state, String message)

@@ -39,13 +39,11 @@ public class LinphoneMiniActivity extends Activity implements View.OnClickListen
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aaa_main);
-        mManager = new LinphoneMiniManager(this);
 
         txtNum = (EditText) findViewById(R.id.txt_num);
         btnCall = (Button) findViewById(R.id.btn_call);
 
         btnCall.setOnClickListener(this);
-
     }
 
     @Override
