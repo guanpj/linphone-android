@@ -2,8 +2,11 @@ package com.longrise.jie.sample;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -40,12 +43,19 @@ public class LinphoneMiniLoginActivity extends Activity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aaa_login);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            requestPermission();
+        }
+        else
+        {
+            initErrorLogDetactor();
+        }
+
         initView();
         regEvent();
 
-        accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneMiniManager.getLc(), LinphoneMiniPreferences.instance().getXmlrpcUrl());
-        accountCreator.setDomain(getResources().getString(R.string.default_domain));
-        accountCreator.setListener(this);
+        mHandler = new Handler();
 
         if (LinphoneMiniService.isReady())
         {
@@ -58,6 +68,37 @@ public class LinphoneMiniLoginActivity extends Activity implements View.OnClickL
             mThread = new ServiceWaitThread();
             mThread.start();
         }
+    }
+
+    private void requestPermission()
+    {
+        if (PermissionsChecker.checkPermissions(this, PermissionsChecker.storagePermissions))
+        {
+            initErrorLogDetactor();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PermissionsChecker.REQUEST_STORAGE_PERMISSION)
+        {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                initErrorLogDetactor();
+            }
+            else
+            {
+                Toast.makeText(LinphoneMiniLoginActivity.this, "000", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void initErrorLogDetactor()
+    {
+        UncaughtException mUncaughtException = UncaughtException.getInstance();
+        mUncaughtException.init(this, getString(R.string.app_name));
     }
 
     private void initView()
@@ -92,6 +133,9 @@ public class LinphoneMiniLoginActivity extends Activity implements View.OnClickL
 
     protected void onServiceReady()
     {
+        accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneMiniManager.getLc(), LinphoneMiniPreferences.instance().getXmlrpcUrl());
+        accountCreator.setDomain(getResources().getString(R.string.default_domain));
+        accountCreator.setListener(this);
         btnLogin.setEnabled(true);
     }
 

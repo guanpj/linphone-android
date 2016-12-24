@@ -67,19 +67,20 @@ public class LinphoneMiniManager implements LinphoneCoreListener
 
     private LinphoneMiniManager(Context context)
     {
+        mContext = context;
+        mInstance = this;
         try
         {
-            mContext = context;
             String basePath = mContext.getFilesDir().getAbsolutePath();
-            copyAssetsFromPackage(basePath);
             mLinphoneConfigFile = basePath + "/.linphonerc";
-            mLinphoneCore = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneConfigFile, null, mContext);
+            copyAssetsFromPackage(basePath);
+            mLinphoneCore = LinphoneCoreFactory.instance().createLinphoneCore(this,
+                    mLinphoneConfigFile, mLinphoneConfigFile, null, mContext);
             initLinphoneCoreValues(basePath);
 
             setUserAgent();
             setFrontCamAsDefault();
             startIterate();
-            mInstance = this;
             mLinphoneCore.setNetworkReachable(true); // Let's assume it's true
         }
         catch (Exception e)
