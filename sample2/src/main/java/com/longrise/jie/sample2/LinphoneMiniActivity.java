@@ -20,34 +20,55 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 /**
  * @author Sylvain Berfini
  */
-public class LinphoneMiniActivity extends Activity {
-	private LinphoneMiniManager mManager;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		mManager = new LinphoneMiniManager(this);
-	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
-	
-	@Override
-	protected void onDestroy() {
-		mManager.destroy();
-		
-		super.onDestroy();
-	}
+public class LinphoneMiniActivity extends Activity implements View.OnClickListener
+{
+    private LinphoneMiniManager mManager;
+
+    private EditText txtNum;
+    private Button btnCall;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.a_main);
+
+        txtNum = (EditText) findViewById(R.id.txt_num);
+        btnCall = (Button) findViewById(R.id.btn_call);
+
+        btnCall.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        mManager.destroy();
+
+        super.onDestroy();
+    }
 }
