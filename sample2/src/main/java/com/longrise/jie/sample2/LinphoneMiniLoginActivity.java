@@ -15,8 +15,11 @@ import android.widget.Toast;
 
 import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 
 import static android.content.Intent.ACTION_MAIN;
@@ -28,6 +31,7 @@ import static android.content.Intent.ACTION_MAIN;
 public class LinphoneMiniLoginActivity extends Activity implements View.OnClickListener, LinphoneAccountCreator.LinphoneAccountCreatorListener
 {
     private LinphoneMiniPreferences mPrefs;
+    private LinphoneCoreListenerBase mListener;
     private LinphoneAddress address;
     private LinphoneAccountCreator accountCreator;
     private Handler mHandler;
@@ -113,23 +117,40 @@ public class LinphoneMiniLoginActivity extends Activity implements View.OnClickL
     private void regEvent()
     {
         btnLogin.setOnClickListener(this);
+        mListener = new LinphoneCoreListenerBase()
+        {
+            @Override
+            public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, LinphoneCore.RegistrationState state, String smessage)
+            {
+                Toast.makeText(LinphoneMiniLoginActivity.this, "登录成功！", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent().setClass(LinphoneMiniLoginActivity.this, LinphoneMiniActivity.class).putExtra("isNewProxyConfig", true));
+                finish();
+            }
+        };
     }
 
     @TargetApi(Build.VERSION_CODES.CUPCAKE)
     @Override
     public void onClick(View view)
     {
-        if (!TextUtils.isEmpty(tvUserName.getText())
-                && !TextUtils.isEmpty(tvPassword.getText())
-                && !TextUtils.isEmpty(tvDomain.getText()))
-        {
-            LinphoneAddress.TransportType transport = LinphoneAddress.TransportType.LinphoneTransportUdp;
+        /*LinphoneAddress.TransportType transport = LinphoneAddress.TransportType.LinphoneTransportUdp;
             saveCreatedAccount(tvUserName.getText().toString(), tvPassword.getText().toString(),
-                    null , null, tvDomain.getText().toString(), transport);
-        }
-        else
+                    null , null, tvDomain.getText().toString(), transport);*/
+
+        LinphoneMiniPreferences.AccountBuilder builder = new LinphoneMiniPreferences.AccountBuilder(LinphoneMiniManager.getLc())
+                .setUsername(tvUserName.getText().toString())
+                .setDomain(tvDomain.getText().toString())
+                .setHa1(null)
+                .setPassword(tvPassword.getText().toString());
+
+        try
         {
-            Toast.makeText(LinphoneMiniLoginActivity.this, "三者都不能为空", Toast.LENGTH_LONG).show();
+            builder.login();
+        }
+        catch (LinphoneCoreException e)
+        {
+            Toast.makeText(this, "登录失败！", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
     }
 
@@ -138,6 +159,7 @@ public class LinphoneMiniLoginActivity extends Activity implements View.OnClickL
         accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneMiniManager.getLc(), LinphoneMiniPreferences.instance().getXmlrpcUrl());
         accountCreator.setDomain(getResources().getString(R.string.default_domain));
         accountCreator.setListener(this);
+        LinphoneMiniManager.getLc().addListener(mListener);
         btnLogin.setEnabled(true);
     }
 
@@ -240,15 +262,6 @@ public class LinphoneMiniLoginActivity extends Activity implements View.OnClickL
     @Override
     public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator linphoneAccountCreator, LinphoneAccountCreator.Status status)
     {
-        if(status.equals(LinphoneAccountCreator.Status.AccountExistWithAlias))
-        {
-            startActivity(new Intent().setClass(this, LinphoneMiniActivity.class).putExtra("isNewProxyConfig", true));
-            finish();
-        }
-        else
-        {
-
-        }
     }
 
     @Override
@@ -302,6 +315,13 @@ public class LinphoneMiniLoginActivity extends Activity implements View.OnClickL
     public void onAccountCreatorPasswordUpdated(LinphoneAccountCreator linphoneAccountCreator, LinphoneAccountCreator.Status status)
     {
 
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        LinphoneMiniManager.getLc().removeListener(mListener);
+        super.onDestroy();
     }
 
     private class ServiceWaitThread extends Thread

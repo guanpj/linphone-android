@@ -53,6 +53,13 @@ public class LinphoneMiniService extends Service
         return mInstance != null;
     }
 
+    public static LinphoneMiniService instance()
+    {
+        if (isReady()) return mInstance;
+
+        throw new RuntimeException("LinphoneService not instantiated yet");
+    }
+
     @Override
     public synchronized void onDestroy()
     {

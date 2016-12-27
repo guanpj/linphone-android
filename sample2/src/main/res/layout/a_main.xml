@@ -4,15 +4,47 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/txt_num"
+    <LinearLayout
+        android:id="@+id/dail_layout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/btn_call"
-        android:text="Call"
+        <EditText
+            android:id="@+id/txt_num"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btn_call"
+            android:text="Call"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/call_layout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <TextView
+            android:textAlignment="center"
+            android:text="正在拨号..."
+            android:textSize="35sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btn_decline"
+            android:textAlignment="center"
+            android:text="挂断"
+            android:textSize="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
 </LinearLayout>

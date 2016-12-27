@@ -48,7 +48,10 @@
         android:theme="@style/Default">
 
         <activity android:name="com.longrise.jie.sample.LinphoneMiniLoginActivity">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity android:name="com.longrise.jie.sample.LinphoneMiniActivity"/>
@@ -56,10 +59,7 @@
         <service android:name="com.longrise.jie.sample.LinphoneMiniService"/>
 
         <activity android:name="com.longrise.jie.sample.test.LinphoneMiniActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
     </application>

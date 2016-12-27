@@ -121,9 +121,24 @@ public class LinphoneMiniLoginActivity extends Activity implements View.OnClickL
                 && !tvPassword.getText().toString().isEmpty()
                 && !tvDomain.getText().toString().isEmpty())
         {
-            LinphoneAddress.TransportType transport = LinphoneAddress.TransportType.LinphoneTransportUdp;
+            /*LinphoneAddress.TransportType transport = LinphoneAddress.TransportType.LinphoneTransportUdp;
             saveCreatedAccount(tvUserName.getText().toString(), tvPassword.getText().toString(),
-                    null , null, tvDomain.getText().toString(), transport);
+                    null , null, tvDomain.getText().toString(), transport);*/
+
+            LinphoneMiniPreferences.AccountBuilder builder = new LinphoneMiniPreferences.AccountBuilder(LinphoneMiniManager.getLc())
+                    .setUsername(tvUserName.getText().toString())
+                    .setDomain(tvDomain.getText().toString())
+                    .setHa1(null)
+                    .setPassword(tvPassword.getText().toString());
+
+            try
+            {
+                builder.login();
+            }
+            catch (LinphoneCoreException e)
+            {
+                e.printStackTrace();
+            }
         }
         else
         {

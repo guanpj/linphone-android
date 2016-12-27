@@ -17,23 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-import java.util.Arrays;
-import java.util.List;
-
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.LinphoneCallParams;
-import org.linphone.core.LinphoneChatMessage;
-import org.linphone.core.LinphoneChatRoom;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.core.LinphonePlayer;
-import org.linphone.mediastream.Log;
-import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
-import org.linphone.ui.Numpad;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -75,6 +58,23 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCallParams;
+import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatRoom;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphonePlayer;
+import org.linphone.mediastream.Log;
+import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
+import org.linphone.ui.Numpad;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Sylvain Berfini

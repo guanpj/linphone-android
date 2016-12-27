@@ -215,7 +215,6 @@ public class LinphoneMiniPreferences
 		private boolean tempEnabled = true;
 		private boolean tempNoDefault = false;
 
-
 		public AccountBuilder(LinphoneCore lc) {
 			this.lc = lc;
 		}
@@ -387,6 +386,29 @@ public class LinphoneMiniPreferences
 
 			if (!tempNoDefault)
 				lc.setDefaultProxyConfig(prxCfg);
+		}
+
+		public void login() throws LinphoneCoreException{
+
+			String strIdetify = "sip:" + tempUsername + "@" + tempDomain;
+
+			if (tempPassword != null) {
+				// create authentication structure from identity and add to core
+				lc.addAuthInfo(LinphoneCoreFactory.instance().createAuthInfo(tempUsername, tempPassword, null, tempDomain));
+			}
+
+			LinphoneProxyConfig proxyCfg = lc.createProxyConfig(strIdetify, tempDomain, null, true);
+			proxyCfg.setExpires(2000);
+			lc.addProxyConfig(proxyCfg);
+			lc.setDefaultProxyConfig(proxyCfg);
+
+			/*lc.getDefaultProxyConfig().edit();
+			lc.getDefaultProxyConfig().enableRegister(false);
+			lc.getDefaultProxyConfig().done();
+
+			lc.getDefaultProxyConfig().edit();
+			lc.getDefaultProxyConfig().enableRegister(true);
+			lc.getDefaultProxyConfig().done();*/
 		}
 	}
 
