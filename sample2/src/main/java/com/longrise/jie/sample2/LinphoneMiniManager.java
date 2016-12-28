@@ -20,11 +20,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.media.AudioManager;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCallStats;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
@@ -53,12 +55,15 @@ import java.nio.ByteBuffer;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static android.media.AudioManager.STREAM_VOICE_CALL;
+
 /**
  * @author Sylvain Berfini
  */
 public class LinphoneMiniManager implements LinphoneCoreListener
 {
     private static LinphoneMiniManager mInstance;
+    private AudioManager mAudioManager;
     private Context mContext;
     private LinphoneCore mLinphoneCore;
     private Timer mTimer;
@@ -81,6 +86,7 @@ public class LinphoneMiniManager implements LinphoneCoreListener
             setUserAgent();
             setFrontCamAsDefault();
             startIterate();
+            mAudioManager = ((AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE));
             mLinphoneCore.setNetworkReachable(true); // Let's assume it's true
         }
         catch (Exception e)
@@ -216,6 +222,7 @@ public class LinphoneMiniManager implements LinphoneCoreListener
         return mInstance != null;
     }
 
+
     @Override
     public void globalState(LinphoneCore lc, GlobalState state, String message)
     {
@@ -226,7 +233,39 @@ public class LinphoneMiniManager implements LinphoneCoreListener
     public void callState(LinphoneCore lc, LinphoneCall call, State cstate,
                           String message)
     {
-        Log.d("Call state: " + cstate + "(" + message + ")");
+        if (cstate == State.OutgoingInit)
+        {
+            mAudioManager.abandonAudioFocus(null);
+            mAudioManager.requestAudioFocus(null, STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT );
+        }
+    }
+
+    public boolean addVideo()
+    {
+        LinphoneCall call = mLinphoneCore.getCurrentCall();
+        call.enableCamera(true);
+        return reinviteWithVideo();
+    }
+
+    boolean reinviteWithVideo()
+    {
+        LinphoneCall lCall = mLinphoneCore.getCurrentCall();
+        if (lCall == null) {
+            Log.e("Trying to reinviteWithVideo while not in call: doing nothing");
+            return false;
+        }
+        LinphoneCallParams params = lCall.getCurrentParamsCopy();
+
+        if (params.getVideoEnabled()) return false;
+
+        // Abort if not enough bandwidth...
+        if (!params.getVideoEnabled()) {
+            return false;
+        }
+
+        // Not yet in video call: try to re-invite with video
+        mLinphoneCore.updateCall(lCall, params);
+        return true;
     }
 
     @Override

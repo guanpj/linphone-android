@@ -58,9 +58,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".LinphoneMiniActivity"></activity>
+        <activity android:name=".LinphoneMiniActivity">
 
-        <service android:name=".LinphoneMiniService"></service>
+        </activity>
+
+        <activity android:name=".CallActivity"/>
+
+        <service android:name=".LinphoneMiniService"/>
 
         <activity android:name=".test.LinphoneMiniActivity">
 

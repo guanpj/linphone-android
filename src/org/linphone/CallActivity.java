@@ -38,6 +38,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -301,6 +302,13 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			callFragment.setArguments(getIntent().getExtras());
 			getFragmentManager().beginTransaction().add(R.id.fragmentContainer, callFragment).commitAllowingStateLoss();
 		}
+	}
+
+	@Nullable
+	@Override
+	public View onCreatePanelView(int featureId)
+	{
+		return super.onCreatePanelView(featureId);
 	}
 
 	private boolean isVideoEnabled(LinphoneCall call) {

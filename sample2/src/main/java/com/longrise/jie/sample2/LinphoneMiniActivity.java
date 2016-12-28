@@ -18,9 +18,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +39,9 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.longrise.jie.sample2.LinphoneMiniManager.getLc;
 
@@ -60,6 +66,9 @@ public class LinphoneMiniActivity extends Activity implements View.OnClickListen
 
         initView();
         regEvent();
+
+        checkAndRequestPermission(new String [] {Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO, }, 1);
     }
 
     private void initView()
@@ -86,6 +95,11 @@ public class LinphoneMiniActivity extends Activity implements View.OnClickListen
                     lyDail.setVisibility(View.GONE);
                     lyCall.setVisibility(View.VISIBLE);
                 }
+                else if (state == LinphoneCall.State.CallEnd || state == LinphoneCall.State.Error)
+                {
+                    lyDail.setVisibility(View.VISIBLE);
+                    lyCall.setVisibility(View.GONE);
+                }
                 else if(state == LinphoneCall.State.Connected)
                 {
                     Intent intent = new Intent(LinphoneMiniActivity.this, CallActivity.class);
@@ -94,6 +108,29 @@ public class LinphoneMiniActivity extends Activity implements View.OnClickListen
             }
         };
         LinphoneMiniManager.getLc().addListener(mListener);
+    }
+
+    public void checkAndRequestPermission(String[] permissions, int result)
+    {
+        List<String> needRequestPermissions = new ArrayList<>();
+        for(String permission : permissions)
+        {
+            int permissionGranted = getPackageManager().checkPermission(permission, getPackageName());
+            if (permissionGranted != PackageManager.PERMISSION_GRANTED)
+            {
+                needRequestPermissions.add(permission);
+            }
+        }
+        if(!needRequestPermissions.isEmpty())
+        {
+            ActivityCompat.requestPermissions(this, needRequestPermissions.toArray(new String[needRequestPermissions.size()]), result);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
