@@ -104,7 +104,7 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 				
 				mGestureDetector.onTouchEvent(event);
 				if (inCallActivity != null) {
-					inCallActivity.displayVideoCallControlsIfHidden();
+					//inCallActivity.displayVideoCallControlsIfHidden();
 				}
 				return true;
 			}
@@ -157,7 +157,7 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 			int videoDeviceId = LinphoneMiniManager.getLc().getVideoDevice();
 			videoDeviceId = (videoDeviceId + 1) % AndroidCameraConfiguration.retrieveCameras().length;
 			LinphoneMiniManager.getLc().setVideoDevice(videoDeviceId);
-			CallManager.getInstance().updateCall();
+			//CallManager.getInstance().updateCall();
 			
 			// previous call will cause graph reconstruction -> regive preview
 			// window
@@ -173,9 +173,6 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 	public void onResume() {		
 		super.onResume();
 		
-		if (LinphonePreferences.instance().isOverlayEnabled()) {
-			LinphoneService.instance().destroyOverlay();
-		}
 		if (androidVideoWindowImpl != null) {
 			synchronized (androidVideoWindowImpl) {
 				LinphoneMiniManager.getLc().setVideoWindow(androidVideoWindowImpl);
@@ -197,10 +194,7 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 				LinphoneMiniManager.getLc().setVideoWindow(null);
 			}
 		}
-		if (LinphonePreferences.instance().isOverlayEnabled()) {
-			LinphoneService.instance().createOverlay();
-		}
-		
+
 		super.onPause();
 	}
 	
@@ -223,7 +217,7 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 
 	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-		if (LinphoneMiniUtils.isCallEstablished(LinphoneMiniManager.getLc().getCurrentCall())) {
+		/*if (LinphoneMiniUtils.isCallEstablished(LinphoneMiniManager.getLc().getCurrentCall())) {
 			if (mZoomFactor > 1) {
 				// Video is zoomed, slide is used to change center of zoom
 				if (distanceX > 0 && mZoomCenterX < 1) {
@@ -236,7 +230,7 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 				} else if(distanceY > 0 && mZoomCenterY > 0) {
 					mZoomCenterY -= 0.01;
 				}
-				
+
 				if (mZoomCenterX > 1)
 					mZoomCenterX = 1;
 				if (mZoomCenterX < 0)
@@ -249,20 +243,20 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 				LinphoneMiniManager.getLc().getCurrentCall().zoomVideo(mZoomFactor, mZoomCenterX, mZoomCenterY);
 				return true;
 			}
-		}
-		
+		}*/
+
 		return false;
 	}
 
 	@Override
 	public boolean onDoubleTap(MotionEvent e) {
-		if (LinphoneUtils.isCallEstablished(LinphoneMiniManager.getLc().getCurrentCall())) {
+		/*if (LinphoneMiniUtils.isCallEstablished(LinphoneMiniManager.getLc().getCurrentCall())) {
 			if (mZoomFactor == 1.f) {
 				// Zoom to make the video fill the screen vertically
 				float portraitZoomFactor = ((float) mVideoView.getHeight()) / (float) ((3 * mVideoView.getWidth()) / 4);
 				// Zoom to make the video fill the screen horizontally
 				float landscapeZoomFactor = ((float) mVideoView.getWidth()) / (float) ((3 * mVideoView.getHeight()) / 4);
-				
+
 				mZoomFactor = Math.max(portraitZoomFactor, landscapeZoomFactor);
 			}
 			else {
@@ -271,8 +265,8 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 
 			LinphoneMiniManager.getLc().getCurrentCall().zoomVideo(mZoomFactor, mZoomCenterX, mZoomCenterY);
 			return true;
-		}
-		
+		}*/
+
 		return false;
 	}
 
