@@ -23,6 +23,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 
+import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneProxyConfig;
 
@@ -58,6 +59,25 @@ public class LinphoneMiniUtils
         lOutputStream.flush();
         lOutputStream.close();
         lInputStream.close();
+    }
+
+    public static String getAddressDisplayName(LinphoneAddress address)
+    {
+        if (address.getDisplayName() != null)
+        {
+            return address.getDisplayName();
+        }
+        else
+        {
+            if (address.getUserName() != null)
+            {
+                return address.getUserName();
+            }
+            else
+            {
+                return address.asStringUriOnly();
+            }
+        }
     }
 
     public static String getDisplayableUsernameFromAddress(String sipAddress)

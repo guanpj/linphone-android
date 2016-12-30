@@ -55,6 +55,7 @@ import java.nio.ByteBuffer;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static android.media.AudioManager.STREAM_RING;
 import static android.media.AudioManager.STREAM_VOICE_CALL;
 
 /**
@@ -97,7 +98,7 @@ public class LinphoneMiniManager implements LinphoneCoreListener
 
     public synchronized static final LinphoneMiniManager createAndStart(Context c)
     {
-        if(mInstance == null)
+        if (mInstance == null)
         {
             mInstance = new LinphoneMiniManager(c);
         }
@@ -222,6 +223,10 @@ public class LinphoneMiniManager implements LinphoneCoreListener
         return mInstance != null;
     }
 
+    public void routeAudioToSpeakerHelper(boolean speakerOn)
+    {
+        mLinphoneCore.enableSpeaker(speakerOn);
+    }
 
     @Override
     public void globalState(LinphoneCore lc, GlobalState state, String message)
@@ -236,8 +241,22 @@ public class LinphoneMiniManager implements LinphoneCoreListener
         if (cstate == State.OutgoingInit)
         {
             mAudioManager.abandonAudioFocus(null);
-            mAudioManager.requestAudioFocus(null, STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT );
+            requestAudioFocus(STREAM_VOICE_CALL);
         }
+        else if (cstate == State.IncomingReceived)
+        {
+            requestAudioFocus(STREAM_RING);
+        }
+        if (cstate == State.Connected)
+        {
+            mAudioManager.abandonAudioFocus(null);
+            requestAudioFocus(STREAM_VOICE_CALL);
+        }
+    }
+
+    private void requestAudioFocus(int stream)
+    {
+        mAudioManager.requestAudioFocus(null, stream, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
     }
 
     public boolean addVideo()
@@ -250,7 +269,8 @@ public class LinphoneMiniManager implements LinphoneCoreListener
     boolean reinviteWithVideo()
     {
         LinphoneCall lCall = mLinphoneCore.getCurrentCall();
-        if (lCall == null) {
+        if (lCall == null)
+        {
             Log.e("Trying to reinviteWithVideo while not in call: doing nothing");
             return false;
         }
@@ -259,7 +279,8 @@ public class LinphoneMiniManager implements LinphoneCoreListener
         if (params.getVideoEnabled()) return false;
 
         // Abort if not enough bandwidth...
-        if (!params.getVideoEnabled()) {
+        if (!params.getVideoEnabled())
+        {
             return false;
         }
 

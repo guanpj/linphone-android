@@ -58,11 +58,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".LinphoneMiniActivity">
-
-        </activity>
+        <activity android:name=".LinphoneMiniActivity"/>
 
         <activity android:name=".CallActivity"/>
+
+        <activity android:name=".CallIncomingActivity"/>
 
         <service android:name=".LinphoneMiniService"/>
 

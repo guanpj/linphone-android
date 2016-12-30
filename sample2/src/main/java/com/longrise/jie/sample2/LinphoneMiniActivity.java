@@ -50,6 +50,7 @@ import static com.longrise.jie.sample2.LinphoneMiniManager.getLc;
  */
 public class LinphoneMiniActivity extends Activity implements View.OnClickListener
 {
+    private static LinphoneMiniActivity instance;
     private LinphoneCoreListenerBase mListener;
     private LinphoneCall mCall;
     private LinearLayout lyDail;
@@ -63,12 +64,20 @@ public class LinphoneMiniActivity extends Activity implements View.OnClickListen
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.a_main);
+        instance = this;
 
         initView();
         regEvent();
 
         checkAndRequestPermission(new String [] {Manifest.permission.CAMERA,
                 Manifest.permission.RECORD_AUDIO, }, 1);
+    }
+
+    public static final LinphoneMiniActivity instance()
+    {
+        if (instance != null)
+            return instance;
+        throw new RuntimeException("LinphoneMiniActivity not instantiated yet");
     }
 
     private void initView()
@@ -89,16 +98,34 @@ public class LinphoneMiniActivity extends Activity implements View.OnClickListen
             @Override
             public void callState(LinphoneCore linphoneCore, LinphoneCall linphoneCall, LinphoneCall.State state, String s)
             {
-                if (state == LinphoneCall.State.OutgoingInit || state == LinphoneCall.State.OutgoingProgress)
+                if (state == LinphoneCall.State.IncomingReceived)
+                {
+                    startActivity(new Intent(LinphoneMiniActivity.instance(), CallIncomingActivity.class));
+                }
+                else if (state == LinphoneCall.State.OutgoingInit || state == LinphoneCall.State.OutgoingProgress)
                 {
                     mCall = linphoneCall;
-                    lyDail.setVisibility(View.GONE);
-                    lyCall.setVisibility(View.VISIBLE);
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            lyDail.setVisibility(View.GONE);
+                            lyCall.setVisibility(View.VISIBLE);
+                        }
+                    });
                 }
                 else if (state == LinphoneCall.State.CallEnd || state == LinphoneCall.State.Error)
                 {
-                    lyDail.setVisibility(View.VISIBLE);
-                    lyCall.setVisibility(View.GONE);
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            lyDail.setVisibility(View.VISIBLE);
+                            lyCall.setVisibility(View.GONE);
+                        }
+                    });
                 }
                 else if(state == LinphoneCall.State.Connected)
                 {
@@ -108,6 +135,12 @@ public class LinphoneMiniActivity extends Activity implements View.OnClickListen
             }
         };
         LinphoneMiniManager.getLc().addListener(mListener);
+    }
+
+    public void startCallActivity(LinphoneCall currentCall)
+    {
+        Intent intent = new Intent(this, CallActivity.class);
+        startActivity(intent);
     }
 
     public void checkAndRequestPermission(String[] permissions, int result)

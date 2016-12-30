@@ -50,7 +50,6 @@ public class CallActivity extends Activity implements View.OnClickListener
                 }
                 else if (state == LinphoneCall.State.CallEnd || state == LinphoneCall.State.Error)
                 {
-                    LinphoneMiniManager.getLc().terminateCall(mCall);
                     finish();
                 }
                 else if (state == LinphoneCall.State.CallUpdatedByRemote)
