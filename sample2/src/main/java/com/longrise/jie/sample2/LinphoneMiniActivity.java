@@ -129,15 +129,14 @@ public class LinphoneMiniActivity extends Activity implements View.OnClickListen
                 }
                 else if(state == LinphoneCall.State.Connected)
                 {
-                    Intent intent = new Intent(LinphoneMiniActivity.this, CallActivity.class);
-                    startActivity(intent);
+                    startCallActivity();
                 }
             }
         };
         LinphoneMiniManager.getLc().addListener(mListener);
     }
 
-    public void startCallActivity(LinphoneCall currentCall)
+    public void startCallActivity()
     {
         Intent intent = new Intent(this, CallActivity.class);
         startActivity(intent);

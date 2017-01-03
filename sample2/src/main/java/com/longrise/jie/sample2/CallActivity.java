@@ -21,7 +21,6 @@ import org.linphone.mediastream.Log;
 public class CallActivity extends Activity implements View.OnClickListener
 {
     private LinphoneCoreListenerBase mListener;
-    private LinphoneCall mCall;
     private Button btnVedio;
     private Button btnDecline;
     private CallVideoFragment videoCallFragment;
@@ -45,8 +44,7 @@ public class CallActivity extends Activity implements View.OnClickListener
             {
                 if (state == LinphoneCall.State.StreamsRunning)
                 {
-                    mCall = call;
-                    switchVideo(isVideoEnabled(mCall));
+                    switchVideo(isVideoEnabled(call));
                 }
                 else if (state == LinphoneCall.State.CallEnd || state == LinphoneCall.State.Error)
                 {
@@ -146,8 +144,12 @@ public class CallActivity extends Activity implements View.OnClickListener
         }
         else if (v.getId() == R.id.btn_decline)
         {
-            LinphoneMiniManager.getLc().terminateCall(mCall);
-            finish();
+            LinphoneCall call = LinphoneMiniManager.getLc().getCurrentCall();
+            if (call != null)
+            {
+                LinphoneMiniManager.getLc().terminateCall(call);
+                finish();
+            }
         }
     }
 
@@ -169,5 +171,12 @@ public class CallActivity extends Activity implements View.OnClickListener
             params.setVideoEnabled(true);
         }
         LinphoneMiniManager.getLc().updateCall(call, params);
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        LinphoneMiniManager.getLc().removeListener(mListener);
     }
 }

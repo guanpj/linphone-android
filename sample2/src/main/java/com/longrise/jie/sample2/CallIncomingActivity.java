@@ -60,9 +60,12 @@ public class CallIncomingActivity extends Activity implements View.OnClickListen
     {
         super.onResume();
         mCall = LinphoneMiniManager.getLc().getCurrentCall();
-        LinphoneAddress address = mCall.getRemoteAddress();
-        txtNum.setText(LinphoneMiniUtils.getAddressDisplayName(address) +
-                "    " + address.asStringUriOnly());
+        if(mCall != null)
+        {
+            LinphoneAddress address = mCall.getRemoteAddress();
+            txtNum.setText(LinphoneMiniUtils.getAddressDisplayName(address) +
+                    "    " + address.asStringUriOnly());
+        }
     }
 
     @Override
@@ -86,8 +89,11 @@ public class CallIncomingActivity extends Activity implements View.OnClickListen
     {
         try
         {
-            LinphoneMiniManager.getLc().acceptCall(mCall);
-            LinphoneMiniActivity.instance().startCallActivity(mCall);
+            if(mCall != null)
+            {
+                LinphoneMiniManager.getLc().acceptCall(mCall);
+                finish();
+            }
         }
         catch (LinphoneCoreException e)
         {

@@ -6,13 +6,13 @@
 
     <EditText
         android:id="@+id/txt_username"
-        android:text="1004"
+        android:text="1003"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <EditText
         android:id="@+id/txt_passwd"
-        android:text="1004"
+        android:text="1003"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
