@@ -3,7 +3,6 @@ package com.longrise.jie.test;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
@@ -54,6 +53,13 @@ public class LinphoneMiniService extends Service
         return mInstance != null;
     }
 
+    public static LinphoneMiniService instance()
+    {
+        if (isReady()) return mInstance;
+
+        throw new RuntimeException("LinphoneService not instantiated yet");
+    }
+
     @Override
     public synchronized void onDestroy()
     {
@@ -66,7 +72,6 @@ public class LinphoneMiniService extends Service
         super.onDestroy();
     }
 
-    @Nullable
     @Override
     public IBinder onBind(Intent intent)
     {

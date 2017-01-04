@@ -1,13 +1,11 @@
 package com.longrise.jie.test;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,8 +13,11 @@ import android.widget.Toast;
 
 import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 
 import static android.content.Intent.ACTION_MAIN;
@@ -28,6 +29,7 @@ import static android.content.Intent.ACTION_MAIN;
 public class LinphoneMiniLoginActivity extends Activity implements View.OnClickListener, LinphoneAccountCreator.LinphoneAccountCreatorListener
 {
     private LinphoneMiniPreferences mPrefs;
+    private LinphoneCoreListenerBase mListener;
     private LinphoneAddress address;
     private LinphoneAccountCreator accountCreator;
     private Handler mHandler;
@@ -41,21 +43,13 @@ public class LinphoneMiniLoginActivity extends Activity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.aaa_login);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            requestPermission();
-        }
-        else
-        {
-            initErrorLogDetactor();
-        }
+        setContentView(R.layout.a_login);
 
         initView();
         regEvent();
 
         mHandler = new Handler();
+        mPrefs = LinphoneMiniPreferences.instance();
 
         if (LinphoneMiniService.isReady())
         {
@@ -70,37 +64,6 @@ public class LinphoneMiniLoginActivity extends Activity implements View.OnClickL
         }
     }
 
-    private void requestPermission()
-    {
-        if (PermissionsChecker.checkPermissions(this, PermissionsChecker.storagePermissions))
-        {
-            initErrorLogDetactor();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PermissionsChecker.REQUEST_STORAGE_PERMISSION)
-        {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
-                initErrorLogDetactor();
-            }
-            else
-            {
-                Toast.makeText(LinphoneMiniLoginActivity.this, "000", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void initErrorLogDetactor()
-    {
-        UncaughtException mUncaughtException = UncaughtException.getInstance();
-        mUncaughtException.init(this, getString(R.string.app_name));
-    }
-
     private void initView()
     {
         tvUserName = (TextView) findViewById(R.id.txt_username);
@@ -112,23 +75,47 @@ public class LinphoneMiniLoginActivity extends Activity implements View.OnClickL
     private void regEvent()
     {
         btnLogin.setOnClickListener(this);
+        mListener = new LinphoneCoreListenerBase()
+        {
+            @Override
+            public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, LinphoneCore.RegistrationState state, String smessage)
+            {
+                if(state == LinphoneCore.RegistrationState.RegistrationOk)
+                {
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            Toast.makeText(LinphoneMiniLoginActivity.this, "登录成功！", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent().setClass(LinphoneMiniLoginActivity.this, LinphoneMiniActivity.class));
+                            finish();
+                        }
+                    });
+                }
+                else if(state == LinphoneCore.RegistrationState.RegistrationFailed)
+                {
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            Toast.makeText(LinphoneMiniLoginActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        };
     }
 
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
     @Override
     public void onClick(View view)
     {
-        if (!tvUserName.getText().toString().isEmpty()
-                && !tvPassword.getText().toString().isEmpty()
-                && !tvDomain.getText().toString().isEmpty())
-        {
-            LinphoneAddress.TransportType transport = LinphoneAddress.TransportType.LinphoneTransportUdp;
+        LinphoneAddress.TransportType transport = LinphoneAddress.TransportType.LinphoneTransportUdp;
             saveCreatedAccount(tvUserName.getText().toString(), tvPassword.getText().toString(),
                     null , null, tvDomain.getText().toString(), transport);
-        }
-        else
-        {
-            Toast.makeText(LinphoneMiniLoginActivity.this, "三者都不能为空", Toast.LENGTH_LONG).show();
-        }
+
     }
 
     protected void onServiceReady()
@@ -136,9 +123,11 @@ public class LinphoneMiniLoginActivity extends Activity implements View.OnClickL
         accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneMiniManager.getLc(), LinphoneMiniPreferences.instance().getXmlrpcUrl());
         accountCreator.setDomain(getResources().getString(R.string.default_domain));
         accountCreator.setListener(this);
+        LinphoneMiniManager.getLc().addListener(mListener);
         btnLogin.setEnabled(true);
     }
 
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
     public void saveCreatedAccount(String username, String password, String prefix, String ha1, String domain, LinphoneAddress.TransportType transport)
     {
         username = LinphoneMiniUtils.getDisplayableUsernameFromAddress(username);
@@ -154,64 +143,12 @@ public class LinphoneMiniLoginActivity extends Activity implements View.OnClickL
             Log.e(e);
         }
 
-        boolean isMainAccountLinphoneDotOrg = domain.equals(getString(R.string.default_domain));
         LinphoneMiniPreferences.AccountBuilder builder = new LinphoneMiniPreferences.AccountBuilder(LinphoneMiniManager.getLc())
                 .setUsername(username)
                 .setDomain(domain)
                 .setHa1(ha1)
-                .setPassword(password);
-
-        if (prefix != null)
-        {
-            builder.setPrefix(prefix);
-        }
-
-        if (isMainAccountLinphoneDotOrg)
-        {
-            if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets))
-            {
-                builder.setProxy(domain)
-                        .setTransport(LinphoneAddress.TransportType.LinphoneTransportTcp);
-            }
-            else
-            {
-                builder.setProxy(domain)
-                        .setTransport(LinphoneAddress.TransportType.LinphoneTransportTls);
-            }
-
-            builder.setExpires("604800")
-                    .setAvpfEnabled(true)
-                    .setAvpfRRInterval(3)
-                    .setQualityReportingCollector("sip:voip-metrics@sip.linphone.org")
-                    .setQualityReportingEnabled(true)
-                    .setQualityReportingInterval(180)
-                    .setRealm("sip.linphone.org")
-                    .setNoDefault(false);
-
-            mPrefs.enabledFriendlistSubscription(getResources().getBoolean(R.bool.use_friendlist_subscription));
-
-            mPrefs.setStunServer(getString(R.string.default_stun));
-            mPrefs.setIceEnabled(true);
-
-            accountCreator.setUsername(username);
-            accountCreator.setPassword(password);
-            accountCreator.setHa1(ha1);
-        }
-        else
-        {
-            String forcedProxy = "";
-            if (!TextUtils.isEmpty(forcedProxy))
-            {
-                builder.setProxy(forcedProxy)
-                        .setOutboundProxyEnabled(true)
-                        .setAvpfRRInterval(5);
-            }
-
-            if (transport != null)
-            {
-                builder.setTransport(transport);
-            }
-        }
+                .setPassword(password)
+                .setTransport(transport);
 
         if (getResources().getBoolean(R.bool.enable_push_id))
         {
@@ -237,15 +174,6 @@ public class LinphoneMiniLoginActivity extends Activity implements View.OnClickL
     @Override
     public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator linphoneAccountCreator, LinphoneAccountCreator.Status status)
     {
-        if(status.equals(LinphoneAccountCreator.Status.AccountExistWithAlias))
-        {
-            startActivity(new Intent().setClass(this, LinphoneMiniActivity.class).putExtra("isNewProxyConfig", true));
-            finish();
-        }
-        else
-        {
-
-        }
     }
 
     @Override
@@ -299,6 +227,13 @@ public class LinphoneMiniLoginActivity extends Activity implements View.OnClickL
     public void onAccountCreatorPasswordUpdated(LinphoneAccountCreator linphoneAccountCreator, LinphoneAccountCreator.Status status)
     {
 
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        LinphoneMiniManager.getLc().removeListener(mListener);
+        super.onDestroy();
     }
 
     private class ServiceWaitThread extends Thread

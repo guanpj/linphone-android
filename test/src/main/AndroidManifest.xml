@@ -48,25 +48,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainActivity">
-
-        </activity>
-
-        <activity android:name="com.longrise.jie.test.test.LinphoneMiniActivity">
-
-        </activity>
-
-        <activity android:name="LinphoneMiniLoginActivity">
+        <activity android:name=".LinphoneMiniLoginActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name="LinphoneMiniActivity"></activity>
+        <activity android:name=".LinphoneMiniActivity"/>
 
-        <service android:name="LinphoneMiniService"></service>
+        <activity android:name=".CallActivity"/>
+
+        <activity android:name=".CallIncomingActivity"/>
+
+        <service android:name=".LinphoneMiniService"/>
 
     </application>
 
